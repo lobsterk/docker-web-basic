@@ -17,9 +17,7 @@ services:
            - $DOCKRIXDIR/nginx/nginx.conf:/etc/nginx/nginx.conf
            - $DOCKRIXDIR/php-fpm/php.ini:/etc/php/7.0/fpm/php.ini
            - $DOCKRIXDIR/php-fpm/php-fpm.conf:/etc/php/7.0/fpm/php-fpm.conf
-        networks:
-          default:
-            ipv4_address: $WEB_IP
+
 ## MySQL Container
     mysql:
         image: mysql:latest
@@ -35,19 +33,11 @@ services:
             MYSQL_USER: $MYSQL_USER
             MYSQL_PASSWORD: $MYSQL_PASSWORD
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-        networks:
-            default:
-              ipv4_address: $MYSQL_IP
+# Adminer container
     adminer:
             image: adminer
+            container_name: adminer
+            links:
+                - "mysql"
             ports:
                 - "$ADMINER_PORTS"
-### Network
-networks:
-    default:
-        driver: bridge
-        ipam:
-            driver: default
-            config:
-              - subnet: $SUBNET
-                gateway: $GATEWAY
